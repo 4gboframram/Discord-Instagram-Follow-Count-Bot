@@ -1,0 +1,91 @@
+1621523843422	geckodriver	INFO	Listening on 127.0.0.1:48419
+1621523844433	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile6oKSEH"
+*** You are running in headless mode.
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621523849937	Marionette	INFO	Marionette enabled
+
+(/usr/lib/firefox/firefox:544): GLib-GObject-CRITICAL **: 15:17:35.505: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+
+(/usr/lib/firefox/firefox:565): GLib-GObject-CRITICAL **: 15:17:36.212: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+
+(/usr/lib/firefox/firefox:639): GLib-GObject-CRITICAL **: 15:17:42.240: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1621523862897	Marionette	INFO	Listening on port 33625
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1621523863222	Marionette	WARN	TLS certificate errors will be ignored for this session
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+[GFX1-]: RenderCompositorSWGL failed mapping default framebuffer, no dt
+1621523885306	geckodriver	INFO	Listening on 127.0.0.1:55959
+1621523885320	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilec3j9hg"
+*** You are running in headless mode.
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621523887039	Marionette	INFO	Marionette enabled
+
+(/usr/lib/firefox/firefox:751): GLib-GObject-CRITICAL **: 15:18:11.828: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+
+(/usr/lib/firefox/firefox:775): GLib-GObject-CRITICAL **: 15:18:30.799: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+Exiting due to channel error.
+Exiting due to channel error.
+1621523973813	geckodriver	INFO	Listening on 127.0.0.1:51453
+1621523974830	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileThTDb9"
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621523977348	Marionette	INFO	Marionette enabled
+Exiting due to channel error.
+Exiting due to channel error.
+1621524390438	geckodriver	INFO	Listening on 127.0.0.1:39209
+1621524391431	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile5dd7qy"
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621524393550	Marionette	INFO	Marionette enabled
+Exiting due to channel error.
+Exiting due to channel error.
+1621524471307	geckodriver	INFO	Listening on 127.0.0.1:55975
+1621524471324	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilevRnlJW"
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621524473937	Marionette	INFO	Marionette enabled
+1621524489036	geckodriver	INFO	Listening on 127.0.0.1:48499
+1621524490052	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileN97vQn"
+1621524571535	geckodriver	INFO	Listening on 127.0.0.1:36027
+1621524572539	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileA7d4Dc"
+1621524732438	geckodriver	INFO	Listening on 127.0.0.1:42921
+1621524732501	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilesSdjTT"
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621524734359	Marionette	INFO	Marionette enabled
+Exiting due to channel error.
+Exiting due to channel error.
+1621524958801	geckodriver	INFO	Listening on 127.0.0.1:54175
+1621524959802	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileVTG9XI"
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621524961768	Marionette	INFO	Marionette enabled
+Exiting due to channel error.
+Exiting due to channel error.
+1621525147070	geckodriver	INFO	Listening on 127.0.0.1:56369
+1621525148105	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "--marionette" "-headless" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile0005v7"
+*** You are running in headless mode.
+[GFX1-]: glxtest: libpci missing
+[GFX1-]: No GPUs detected via PCI
+1621525153360	Marionette	INFO	Marionette enabled
+
+(/usr/lib/firefox/firefox:2422): GLib-GObject-CRITICAL **: 15:39:29.434: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+Exiting due to channel error.
+Exiting due to channel error.
