@@ -2,12 +2,10 @@ import discord
 import os
 from replit import db
 from discord.ext import commands
-from discord.ext.commands import has_permissions,MissingPermissions
 import random
 import asyncio
 from glob import glob
 import shutil
-
 
 from keep_alive import keep_alive
 from Insta import Instagram
@@ -18,7 +16,6 @@ monitors_is_looping=False
 async def on_ready():
 	print(f'{bot.user.name} has connected to Discord!')
 	await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="insta follower counts"))
-	keep_alive()
 	print('starting monitor update')
 	await update_monitors()
 
@@ -28,7 +25,7 @@ async def on_ready():
 async def monitor(ctx, media, username, channel_type, name):
 	channel=None
 	if name.find('[count]')==-1: 
-		await ctx.send(" You need to use '[count]' in the name of the channel to specify where to put the counter number")
+		await ctx.send("You need to use '[count]' in the name of the channel to specify where to put the counter number")
 		return
 
 	if channel_type=='text':
@@ -52,15 +49,21 @@ async def monitor(ctx, media, username, channel_type, name):
 		except: 
 			await ctx.send('I do not have the permissions to lock the voice channel. Deleting channel.')
 			await channel.delete()
+			return
 	if media=="insta" or media=="instagram":
 		media="instagram"
-		try:	
-			follower_count=Instagram(username).get_follow_count()
+		follower_count=-1
+		print(channel.id)
+		try:
+			
+			follower_count=await Instagram(username).async_follow_count()
 		except: 
 			await ctx.channel.send('Something went wrong with getting your Instagram follower count. Deleting monitor')
 			await channel.delete()
+			return
 		try:
 			await channel.edit(name=name.replace(r'[count]', str(follower_count)))
+			
 		except: 
 			await ctx.send("Something went wrong editing the channel name. Deleting channel")
 			await channel.delete()
@@ -101,42 +104,131 @@ async def update_monitors():
 			await asyncio.sleep(600)
 
 @bot.command()
-async def recent(ctx, username):
+async def recent(ctx, username, counter=0):
+	
 	print(f"getting recent for {username}")
-	likes,comments=Instagram(username).get_recent_post()
+	if not os.path.exists(f"{username}"):
+		likes, comments=Instagram(username).get_recent_post()
+	
+	
 	media=glob(f'{username}/*mp4')
 	media.extend(glob(f'{username}/*jpg'))
-	filename=media[0]
+	filename=media[counter]
 	desc_file=open(glob(f"{username}/*.txt")[0])
 	desc=desc_file.read()
 	desc_file.close()
-	embed=discord.Embed(author=f'Top post from {username}', color=random.randint(0,2**16-1))
-	embed.set_footer(text=f'❤{likes}\t💬{comments}')
-	
+	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Recent post from {username}', color=random.randint(0,2**16-1))
+	try: embed.set_footer(text=f'❤{likes}\t💬{comments}')
+	except UnboundLocalError: embed.set_footer(text=f'❤UwU\t💬OwO')
 	embed.add_field(name=f'{username}', value=f"{desc}", inline=True)
 	
 	embed.set_image(url=f"attachment://{os.path.basename(filename)}")
-	await ctx.send(embed=embed, file=discord.File(filename))
-	shutil.rmtree(username)
+
+	post=await ctx.send(embed=embed, file=discord.File(filename))
+	if len(media)>1:
+		if counter<0: counter=0
+		if counter==0: await post.add_reaction('➡️')
+		elif counter==len(media)-1: await post.add_reaction('⬅️')
+		else: 
+			await post.add_reaction('⬅️')
+			await post.add_reaction('➡️')
+
+		
+		
+		def check(reaction, user):
+			emoji=str(reaction.emoji)
+			return reaction.message.id==post.id and (emoji=='⬅️' or emoji=='➡️') and not user.bot
+		try:
+			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
+			print(f'got reaction {str(reaction.emoji)}')
+			
+			if str(reaction.emoji)=='➡️':
+				counter+=1
+				await post.delete()
+				try: await recent(ctx, username, counter,)
+				except:
+					counter-=1
+					await recent(ctx,username, counter)
+				await recent(ctx, username, counter)
+			if str(reaction.emoji)=='⬅️':
+				counter-=1
+				await post.delete()
+				try: await recent(ctx, username, counter,)
+				except:
+					counter+=1
+					await recent(ctx,username, counter)
+				
+		except asyncio.TimeoutError: print(f'removing {username} directory')
+	try:
+		shutil.rmtree(username)
+		return
+	except: pass
 
 @bot.command()
-async def top(ctx, username):
-	print(f"getting top for {username}")
-	likes,comments=Instagram(username).get_top_post()
+async def top(ctx, username, counter=0):
+		
+	print(f"getting recent for {username}")
+	if not os.path.exists(f"{username}"):
+		likes, comments=Instagram(username).get_top_post()
+	
+	
 	media=glob(f'{username}/*mp4')
 	media.extend(glob(f'{username}/*jpg'))
-	filename=media[0]
+	filename=media[counter]
 	desc_file=open(glob(f"{username}/*.txt")[0])
 	desc=desc_file.read()
 	desc_file.close()
-	embed=discord.Embed(author=f'Top post from {username}', color=random.randint(0,2**16-1))
-	embed.set_footer(text=f'❤{likes}\n💬{comments}')
-	
+	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Recent post from {username}', color=random.randint(0,2**16-1))
+	try: embed.set_footer(text=f'❤{likes}\t💬{comments}')
+	except UnboundLocalError: embed.set_footer(text=f'❤UwU\t💬OwO')
 	embed.add_field(name=f'{username}', value=f"{desc}", inline=True)
 	
 	embed.set_image(url=f"attachment://{os.path.basename(filename)}")
-	await ctx.send(embed=embed, file=discord.File(filename))
-	shutil.rmtree(username)
 
+	post=await ctx.send(embed=embed, file=discord.File(filename))
+	if len(media)>1:
+		if counter<0: counter=0
+		if counter==0: await post.add_reaction('➡️')
+		elif counter==len(media)-1: await post.add_reaction('⬅️')
+		else: 
+			await post.add_reaction('⬅️')
+			await post.add_reaction('➡️')
+
+		
+		
+		def check(reaction, user):
+			emoji=str(reaction.emoji)
+			return reaction.message.id==post.id and (emoji=='⬅️' or emoji=='➡️') and not user.bot
+		try:
+			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
+			print(f'got reaction {str(reaction.emoji)}')
+			
+			if str(reaction.emoji)=='➡️':
+				counter+=1
+				await post.delete()
+				try: await recent(ctx, username, counter,)
+				except:
+					counter-=1
+					await recent(ctx,username, counter)
+				await recent(ctx, username, counter)
+			if str(reaction.emoji)=='⬅️':
+				counter-=1
+				await post.delete()
+				try: await top(ctx, username, counter,)
+				except:
+					counter+=1
+					await top(ctx,username, counter)
+				
+		except asyncio.TimeoutError: 
+			print(f'removing {username} directory')
+			return
+	try:
+		shutil.rmtree(username)
+		return
+	except: return
+
+
+				
+keep_alive() #you should comment this out if you are hosting locally
 client=discord.Client()
 bot.run(os.getenv('TOKEN'))

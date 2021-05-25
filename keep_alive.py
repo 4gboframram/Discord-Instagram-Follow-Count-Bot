@@ -1,3 +1,8 @@
+#This file is used to keep the replit active
+#If you're using replit, you can use this.
+#To use, use uptimerobot to ping the 
+#site replit creates every at least 20 minutes
+
 from flask import Flask
 from threading import Thread
 
