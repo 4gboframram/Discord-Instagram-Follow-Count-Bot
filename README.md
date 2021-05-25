@@ -7,7 +7,7 @@ Assuming you know how to create your own discord bot
 - 4: Run `import os; os.environ['USERNAME']='{username}'; os.system('python get_cookies.py')`, where {username} is your Instagram username. 
 We have to do this because the 'secrets' (environment variables) we set in part 2 only work for `main.py`
 - 5: Enter your Instagram password when prompted
-- 6: You should see the `cookies.json` and `sess.pkl` file. Copy the contents, go to secrets and create the secret named 'INSTACOOKIES' with a value of the contents `cookies.json`
+- 6: You should see the `cookies.json` and `sess.pkl` file. Copy the contents, go to secrets and create the secret named `INSTACOOKIES` with a value of the contents `cookies.json`
 - 7: Delete `cookies.json` and `sess.pkl`
 - 8: You should just be able to run
 

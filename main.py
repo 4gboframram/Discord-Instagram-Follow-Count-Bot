@@ -206,11 +206,11 @@ async def top(ctx, username, counter=0):
 			if str(reaction.emoji)=='➡️':
 				counter+=1
 				await post.delete()
-				try: await recent(ctx, username, counter,)
+				try: await top(ctx, username, counter,)
 				except:
 					counter-=1
-					await recent(ctx,username, counter)
-				await recent(ctx, username, counter)
+					await top(ctx,username, counter)
+				await top(ctx, username, counter)
 			if str(reaction.emoji)=='⬅️':
 				counter-=1
 				await post.delete()
