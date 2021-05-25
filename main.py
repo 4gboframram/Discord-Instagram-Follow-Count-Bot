@@ -167,7 +167,7 @@ async def recent(ctx, username, counter=0):
 @bot.command()
 async def top(ctx, username, counter=0):
 		
-	print(f"getting recent for {username}")
+	print(f"getting top for {username}")
 	if not os.path.exists(f"{username}"):
 		likes, comments=Instagram(username).get_top_post()
 	
@@ -178,7 +178,7 @@ async def top(ctx, username, counter=0):
 	desc_file=open(glob(f"{username}/*.txt")[0])
 	desc=desc_file.read()
 	desc_file.close()
-	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Recent post from {username}', color=random.randint(0,2**16-1))
+	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Top post from {username}', color=random.randint(0,2**16-1))
 	try: embed.set_footer(text=f'❤{likes}\t💬{comments}')
 	except UnboundLocalError: embed.set_footer(text=f'❤UwU\t💬OwO')
 	embed.add_field(name=f'{username}', value=f"{desc}", inline=True)
