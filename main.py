@@ -11,7 +11,7 @@ from keep_alive import keep_alive
 from Insta import Instagram
 bot = commands.Bot(command_prefix=".",help_command=None)
 monitors_is_looping=False
-
+gathered_posts=[]
 @bot.event
 async def on_ready():
 	print(f'{bot.user.name} has connected to Discord!')
@@ -104,13 +104,16 @@ async def update_monitors():
 			await asyncio.sleep(600)
 
 @bot.command()
-async def recent(ctx, username, counter=0):
+async def recent(ctx, username, counter=0, likes='UwU', comments='OwO'):
 	
-	print(f"getting recent for {username}")
+	print(f"getting post for {username}")
 	if not os.path.exists(f"{username}"):
-		likes, comments=Instagram(username).get_recent_post()
-	
-	
+		if not (username, 'recent') in gathered_posts:
+			likes, comments=Instagram(username).get_recent_post()
+			gathered_posts.append((username, 'recent'))
+		
+	if not (username, 'recent') in gathered_posts: return
+
 	media=glob(f'{username}/*mp4')
 	media.extend(glob(f'{username}/*jpg'))
 	filename=media[counter]
@@ -119,7 +122,7 @@ async def recent(ctx, username, counter=0):
 	desc_file.close()
 	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Recent post from {username}', color=random.randint(0,2**16-1))
 	try: embed.set_footer(text=f'❤{likes}\t💬{comments}')
-	except UnboundLocalError: embed.set_footer(text=f'❤UwU\t💬OwO')
+	except: embed.set_footer(text=f'❤UwU\t💬OwO')
 	embed.add_field(name=f'{username}', value=f"{desc}", inline=True)
 	
 	embed.set_image(url=f"attachment://{os.path.basename(filename)}")
@@ -132,55 +135,66 @@ async def recent(ctx, username, counter=0):
 		else: 
 			await post.add_reaction('⬅️')
 			await post.add_reaction('➡️')
-
-		
 		
 		def check(reaction, user):
 			emoji=str(reaction.emoji)
 			return reaction.message.id==post.id and (emoji=='⬅️' or emoji=='➡️') and not user.bot
-		try:
-			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
-			print(f'got reaction {str(reaction.emoji)}')
-			
-			if str(reaction.emoji)=='➡️':
-				counter+=1
-				await post.delete()
-				try: await recent(ctx, username, counter,)
-				except:
-					counter-=1
-					await recent(ctx,username, counter)
-				await recent(ctx, username, counter)
-			if str(reaction.emoji)=='⬅️':
-				counter-=1
-				await post.delete()
-				try: await recent(ctx, username, counter,)
-				except:
-					counter+=1
-					await recent(ctx,username, counter)
+		if os.path.exists(f'{username}'):
+			try:
+				reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
+				print(f'got reaction {str(reaction.emoji)}')
 				
-		except asyncio.TimeoutError: print(f'removing {username} directory')
+				if str(reaction.emoji)=='➡️':
+					counter+=1
+					await post.delete()
+					try: await recent(ctx, username, counter, likes, comments)
+					except:
+						counter-=1
+						await recent(ctx,username, counter, likes, comments)
+					return
+				if str(reaction.emoji)=='⬅️':
+					counter-=1
+					await post.delete()
+					try: 
+						await recent(ctx, username, counter, likes, comments)
+						return
+					except:
+						counter+=1
+						await recent(ctx,username, counter, likes, comments)
+						return
+				
+			except asyncio.TimeoutError: 
+				print(f'removing {username} directory')
+				try:
+					gathered_posts.remove((username, 'recent'))
+					shutil.rmtree(username)
+					return
+				except: pass
 	try:
 		shutil.rmtree(username)
-		return
+		gathered_posts.remove((username, 'recent'))
 	except: pass
 
 @bot.command()
-async def top(ctx, username, counter=0):
-		
-	print(f"getting top for {username}")
+async def top(ctx, username, counter=0, likes='UwU', comments='OwO'):
+	
+	print(f"getting post for {username}")
 	if not os.path.exists(f"{username}"):
-		likes, comments=Instagram(username).get_top_post()
-	
-	
+		if not (username, 'top') in gathered_posts:
+			likes, comments=Instagram(username).get_top_post()
+			gathered_posts.append((username, 'top'))
+		
+	if not (username, 'top') in gathered_posts: return
+
 	media=glob(f'{username}/*mp4')
 	media.extend(glob(f'{username}/*jpg'))
 	filename=media[counter]
 	desc_file=open(glob(f"{username}/*.txt")[0])
 	desc=desc_file.read()
 	desc_file.close()
-	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'Top post from {username}', color=random.randint(0,2**16-1))
+	embed=discord.Embed(description=f'({counter+1} of {len(media)})', author=f'top post from {username}', color=random.randint(0,2**16-1))
 	try: embed.set_footer(text=f'❤{likes}\t💬{comments}')
-	except UnboundLocalError: embed.set_footer(text=f'❤UwU\t💬OwO')
+	except: embed.set_footer(text=f'❤UwU\t💬OwO')
 	embed.add_field(name=f'{username}', value=f"{desc}", inline=True)
 	
 	embed.set_image(url=f"attachment://{os.path.basename(filename)}")
@@ -193,42 +207,52 @@ async def top(ctx, username, counter=0):
 		else: 
 			await post.add_reaction('⬅️')
 			await post.add_reaction('➡️')
-
-		
 		
 		def check(reaction, user):
 			emoji=str(reaction.emoji)
 			return reaction.message.id==post.id and (emoji=='⬅️' or emoji=='➡️') and not user.bot
-		try:
-			reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
-			print(f'got reaction {str(reaction.emoji)}')
-			
-			if str(reaction.emoji)=='➡️':
-				counter+=1
-				await post.delete()
-				try: await top(ctx, username, counter,)
-				except:
-					counter-=1
-					await top(ctx,username, counter)
-				await top(ctx, username, counter)
-			if str(reaction.emoji)=='⬅️':
-				counter-=1
-				await post.delete()
-				try: await top(ctx, username, counter,)
-				except:
-					counter+=1
-					await top(ctx,username, counter)
+		if os.path.exists(f'{username}'):
+			try:
+				reaction, user = await bot.wait_for('reaction_add', timeout=60.0, check=check)
+				print(f'got reaction {str(reaction.emoji)}')
 				
-		except asyncio.TimeoutError: 
-			print(f'removing {username} directory')
-			return
+				if str(reaction.emoji)=='➡️':
+					counter+=1
+					await post.delete()
+					try: await top(ctx, username, counter, likes, comments)
+					except:
+						counter-=1
+						await top(ctx,username, counter, likes, comments)
+					return
+				if str(reaction.emoji)=='⬅️':
+					counter-=1
+					await post.delete()
+					try: 
+						await top(ctx, username, counter, likes, comments)
+						return
+					except:
+						counter+=1
+						await top(ctx,username, counter, likes, comments)
+						return
+				
+			except asyncio.TimeoutError: 
+				print(f'removing {username} directory')
+				try:
+					gathered_posts.remove((username, 'top'))
+					shutil.rmtree(username)
+					return
+				except: pass
 	try:
 		shutil.rmtree(username)
-		return
-	except: return
+		gathered_posts.remove((username, 'top'))
+	except: pass
 
 
 				
 keep_alive() #you should comment this out if you are hosting locally
 client=discord.Client()
 bot.run(os.getenv('TOKEN'))
+
+
+#This uses symbolism. The split tail means that the democracy is divided. It also shows Lincoln splitting it, showing that Lincoln is splitting the democracy
+#I honestly can't even tell what is happening except the chair is labeled "Presidental Chairman 1866", a bowl labeled "PAP", and a stool labeled "IVZAZ." I don't understand anything else
